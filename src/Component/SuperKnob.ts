@@ -94,7 +94,6 @@ export class SuperKnob extends HTMLElement {
 
   attachResizeObserver(element: Element) {
     this.resizeObserver = new ResizeObserver(() => {
-      this.cacheDom();
       this.rotateArc(this.value || 0);
     });
 
@@ -215,7 +214,7 @@ export class SuperKnob extends HTMLElement {
       const inversedValue = inverseLerp(this.minVal, this.maxVal, floatValue);
       this.rotateArc(inversedValue);
       this.setOutput(inversedValue);
-      this.value = floatValue;
+      this.value = inversedValue;
     }
 
     if (name === "precision") {
