@@ -1,18 +1,18 @@
 import { GestureController } from "../GestureController";
 import { KeyboardController } from "../KeyboardController";
 import { listenToEvent } from "../lib/events";
-import { lerp } from "../lib/helper";
+import { inverseLerp, lerp } from "../lib/helper";
 import { describeArc, floatToDegree } from "../lib/trigometrie";
 
 //@ts-expect-error
-import html from "./TheKnob.html?raw";
+import html from "./SuperKnob.html?raw";
 //@ts-expect-error
-import css from "./TheKnob.css?raw";
+import css from "./SuperKnob.css?raw";
 
 const template = document.createElement('template');
 template.innerHTML = `<style>${css}</style>${html}`;
 
-export class TheKnob extends HTMLElement {
+export class SuperKnob extends HTMLElement {
   dom: {
     circle?: SVGCircleElement;
     value?: HTMLDivElement;
@@ -27,7 +27,7 @@ export class TheKnob extends HTMLElement {
   value: number | null = null;
   minVal: number = 0;
   maxVal: number = 1;
-  precision: number = 0;
+  precision: number = 1;
 
   strokeWidth: number = 5;
   offset: number = 0;
@@ -63,12 +63,10 @@ export class TheKnob extends HTMLElement {
     this.attachResizeObserver(this.dom.svg!);
     this.addTabIndex();
 
-    // Wait for the next tick to set the initial value
-    setTimeout(() => {
-      this.getAttributeNames().forEach(name => {
-        this.attributeChangedCallback(name, null, this.getAttribute(name));
-      })
+    this.getAttributeNames().forEach(name => {
+      this.attributeChangedCallback(name, null, this.getAttribute(name));
     })
+
   }
 
   disconnectedCallback() {
@@ -80,13 +78,11 @@ export class TheKnob extends HTMLElement {
     const svg = this.shadowRoot?.querySelector<SVGSVGElement>("svg");
     const circle = this.shadowRoot?.querySelector<SVGCircleElement>("#circle");
     const value = this.shadowRoot?.querySelector<HTMLDivElement>("#value");
-    const arc = this.shadowRoot?.querySelector<SVGPathElement>("#arc");
 
     this.dom = {
       ...(svg && { svg }),
       ...(value && { value }),
       ...(circle && { circle }),
-      ...(arc && { arc }),
     }
   }
 
@@ -115,20 +111,34 @@ export class TheKnob extends HTMLElement {
     const offset = parseFloat(computedStyle.getPropertyValue("--offset").replace("px", "")) || this.offset;
     const strokeWidth = parseFloat(computedStyle.getPropertyValue("--stroke-width").replace("px", "")) || this.strokeWidth;
     const center = { x: svg.clientWidth / 2, y: svg.clientHeight / 2 };
-    const radius = svg.clientWidth / 2 - strokeWidth / 2 - offset;
+    const radius = svg.clientWidth / 2 - strokeWidth - offset;
 
-    this.dom.arc!.setAttribute("d", describeArc(center, radius, 0, angle));
+    if (this.dom.arc === undefined) {
+      this.dom.arc = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      this.dom.arc.setAttribute("id", "arc");
+      this.dom.svg?.appendChild(this.dom.arc);
+    }
+
+    this.dom.arc.setAttribute("d", describeArc(center, radius, 0, angle));
   }
 
-  setInnerValue(floatValue: number) {
+  setOutput(floatValue: number) {
+    const lerpValueWithPrecision = lerp(this.minVal, this.maxVal, floatValue).toFixed(this.precision);
+
+    this.dispatchEvent(
+      new CustomEvent("change", {
+        detail: { value: lerpValueWithPrecision },
+        bubbles: true
+      }));
+
     if (!this.dom.value) return;
-    this.dom.value.innerText = `${lerp(this.minVal, this.maxVal, floatValue).toFixed(this.precision)}`;
+    this.dom.value.innerText = `${lerpValueWithPrecision}`;
   }
 
   handleValueChange(event: CustomEvent<{ value: number }>) {
     const value = event.detail.value;
     this.rotateArc(value);
-    this.setInnerValue(value);
+    this.setOutput(value);
     this.value = value;
   }
 
@@ -136,7 +146,7 @@ export class TheKnob extends HTMLElement {
     const value = this.value || 0;
     const newValue = Math.min(Math.max(value + event.detail.value, 0), 0.99999999);
     this.rotateArc(newValue);
-    this.setInnerValue(newValue);
+    this.setOutput(newValue);
     this.value = newValue;
   }
 
@@ -202,8 +212,9 @@ export class TheKnob extends HTMLElement {
 
     if (name === "value") {
       const floatValue = parseFloat(newValue);
-      this.rotateArc(floatValue);
-      this.setInnerValue(floatValue);
+      const inversedValue = inverseLerp(this.minVal, this.maxVal, floatValue);
+      this.rotateArc(inversedValue);
+      this.setOutput(inversedValue);
       this.value = floatValue;
     }
 

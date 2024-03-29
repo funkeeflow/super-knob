@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation - Super Knob</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="../src/index.ts" type="module"></script>
+  <script src="./main.ts" type="module"></script>
+</head>
+
+<body>
+  <main>
+    <section>
+      <h1>🎛️ Super Knob</h1>
+      <p>Super Knob is a <b>web component </b> that allows you to create a knob that can be used to control a value. It is a
+        simple and easy to use component that can be customized to fit your needs.</p>
+    </section>
+    <section class="demo">
+      <article class="demo-card">
+        <header>
+          <h3>Normal</h3>
+          <span class="value"></span>
+        </header>
+        <super-knob value="0.4"></super-knob>
+      </article>
+      <article class="demo-card">
+        <header>
+          <h3>More Precision</h3>
+          <span class="value"></span>
+        </header>
+        <super-knob value="0.2" precision="2"></super-knob>
+      </article>
+      <article class="demo-card">
+        <header>
+          <h3>Value Range</h3>
+          <span class="value"></span>
+        </header>
+        <super-knob value="30" min="0" max="100" precision="0"></super-knob>
+      </article>
+
+    </section>
+  </main>
+</body>
+
+</html>

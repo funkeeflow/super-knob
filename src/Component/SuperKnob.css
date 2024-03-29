@@ -1,7 +1,9 @@
 :host {
-  aspect-ratio: 1/1;
   background-color: #fff;
   border-radius: 50%;
+  max-width: var(--max-width, 150px);
+  display: inline-block;
+  aspect-ratio: 1/1;
 }
 
 :host * {
