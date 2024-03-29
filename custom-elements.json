@@ -1,0 +1,83 @@
+{
+  "version": "experimental",
+  "tags": [
+    {
+      "name": "super-knob",
+      "path": "./dist/super-knob.js",
+      "attributes": [
+        {
+          "name": "value"
+        },
+        {
+          "name": "precision",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "stroke-width"
+        },
+        {
+          "name": "min"
+        },
+        {
+          "name": "max"
+        }
+      ],
+      "properties": [
+        {
+          "name": "direction",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "value",
+          "attribute": "value"
+        },
+        {
+          "name": "minVal",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "maxVal",
+          "type": "number",
+          "default": "1"
+        },
+        {
+          "name": "precision",
+          "attribute": "precision",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "strokeWidth",
+          "type": "number",
+          "default": "5"
+        },
+        {
+          "name": "offset",
+          "attribute": "offset",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "dom",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "abortController"
+        },
+        {
+          "name": "abortSignal",
+          "default": "\"signal\""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "super-knob",
+  "version": "0.0.1",
+  "description": "",
+  "main": "/dist/super-knob.js",
+  "module": "/dist/super-knob.mjs",
+  "typings": "/dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite --mode development",
+    "build-dist": "vite build --mode production",
+    "build-lib": "vite build --mode lib",
+    "analyze": "npm run build-lib && wca analyze ./dist/super-knob.js --outFile custom-elements.json"
+  },
+  "author": "Florian Berg",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "typescript": "^5.4.3",
+    "vite": "^5.2.6",
+    "vite-plugin-dts": "^3.7.3",
+    "web-component-analyzer": "^2.0.0"
+  }
+}
