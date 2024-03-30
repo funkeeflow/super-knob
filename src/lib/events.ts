@@ -2,6 +2,7 @@ export const Events = [
   "knob-value-change",
   "knob-value-relative-change",
   "knob-direction-change",
+  "knob-value-input-mode-toggle",
 ] as const;
 
 export type Event = typeof Events[number];

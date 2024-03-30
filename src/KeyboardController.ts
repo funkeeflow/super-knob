@@ -34,6 +34,9 @@ export class KeyboardController{
     }
 
     switch (event.key) {
+      case "Enter":
+        emitEvent(this.element, "knob-value-input-mode-toggle", {});
+        break;
       case "ArrowUp":
         emitEvent(this.element, "knob-value-relative-change", { value: currentStepSize });
         break;

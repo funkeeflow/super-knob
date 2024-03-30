@@ -15,7 +15,7 @@ template.innerHTML = `<style>${css}</style>${html}`;
 export class SuperKnob extends HTMLElement {
   dom: {
     circle?: SVGCircleElement;
-    value?: HTMLDivElement;
+    value?: HTMLInputElement;
     arc?: SVGPathElement;
     svg?: SVGSVGElement;
   };
@@ -26,7 +26,7 @@ export class SuperKnob extends HTMLElement {
   direction: number = 0;
   value: number | null = null;
   minVal: number = 0;
-  maxVal: number = 1;
+  maxVal: number = 0.99999;
   precision: number = 1;
 
   strokeWidth: number = 5;
@@ -77,7 +77,7 @@ export class SuperKnob extends HTMLElement {
   cacheDom() {
     const svg = this.shadowRoot?.querySelector<SVGSVGElement>("svg");
     const circle = this.shadowRoot?.querySelector<SVGCircleElement>("#circle");
-    const value = this.shadowRoot?.querySelector<HTMLDivElement>("#value");
+    const value = this.shadowRoot?.querySelector<HTMLInputElement>("#value");
 
     this.dom = {
       ...(svg && { svg }),
@@ -131,7 +131,7 @@ export class SuperKnob extends HTMLElement {
       }));
 
     if (!this.dom.value) return;
-    this.dom.value.innerText = `${lerpValueWithPrecision}`;
+    this.dom.value.value = `${lerpValueWithPrecision}`;
   }
 
   handleValueChange(event: CustomEvent<{ value: number }>) {
@@ -153,6 +153,11 @@ export class SuperKnob extends HTMLElement {
     this.direction = event.detail.direction;
   }
 
+  handleInputModeToggle() {
+    if (!this.dom.value) return;
+    this.dom.value.disabled = false;
+  }
+
   attachEvents() {
     this.gestureController = new GestureController(this, this.abortSignal);
     this.gestureController.attachEvents(this);
@@ -160,11 +165,42 @@ export class SuperKnob extends HTMLElement {
     this.keyboardController = new KeyboardController(this, this.abortSignal);
     this.keyboardController.attachEvents(this);
 
+    if (this.dom.value) {
+      this.dom.value.addEventListener("keypress", (event: KeyboardEvent) => {
+
+        const maybeNumericValue = parseInt(event.key);
+        const eventTarget = event.target as HTMLInputElement;
+        const currentValue = parseFloat(eventTarget.value || "0");
+
+        if (
+          isNaN(maybeNumericValue)
+          && ![".", "Backspace", "Enter"].includes(event.key)
+        ) {
+          event.preventDefault();
+        }
+
+        if(event.key === "Enter"){
+          eventTarget.blur();
+        }
+
+      })
+
+      this.dom.value.addEventListener("change", (event) => {
+        const value = parseFloat((event.target as HTMLInputElement).value);
+        const clampedValue = Math.min(Math.max(value, this.minVal), this.maxVal);
+        const inversedValue = inverseLerp(this.minVal, this.maxVal, clampedValue);
+        this.rotateArc(inversedValue);
+        this.setOutput(inversedValue);
+        this.value = inversedValue;
+      })
+    }
+
     this.attachFocusEvents();
 
     listenToEvent(this, "knob-value-change", this.handleValueChange);
     listenToEvent(this, "knob-value-relative-change", this.handleRelativeValueChange);
     listenToEvent(this, "knob-direction-change", this.handleDirectionChange);
+    listenToEvent(this, "knob-value-input-mode-toggle", this.handleInputModeToggle);
   }
 
   attachFocusEvents() {

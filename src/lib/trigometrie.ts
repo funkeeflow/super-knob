@@ -39,5 +39,5 @@ export function degreeToFloat(degree: number) {
 
 export function floatToDegree(float: number) {
   const value = Math.min(Math.max(float, 0), 1);
-  return value * 360;
+  return value * 359.9999;
 }

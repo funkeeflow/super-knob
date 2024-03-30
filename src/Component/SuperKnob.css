@@ -27,6 +27,7 @@ svg {
 }
 
 #value {
+  all:unset;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -38,6 +39,19 @@ svg {
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
+}
+
+#value:focus {
+  /* animation: forwards 0.8s blink infinite; */
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0;
+  }
 }
 
 #value::after {
