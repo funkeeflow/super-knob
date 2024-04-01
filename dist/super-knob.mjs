@@ -148,7 +148,7 @@ class KeyboardController {
     }
   }
 }
-const html = '<div id="container">\n  <input id="value" value="0"></input>\n  <svg></svg>\n</div>';
+const html = '<div id="container">\n  <input id="value" value="0" data-lpignore="true" readonly></input>\n  <svg></svg>\n</div>';
 const css = ':host {\n  background-color: #fff;\n  border-radius: 50%;\n  max-width: var(--max-width, 150px);\n  display: inline-block;\n  aspect-ratio: 1/1;\n}\n\n:host * {\n  box-sizing: border-box;\n}\n\nsvg {\n  width: 100%;\n  height: 100%;\n}\n\n#container {\n  width: 100%;\n  height: 100%;\n  position: relative;\n  padding: var(--offset, 0);\n}\n\n#container:hover {\n  cursor: pointer;\n}\n\n#value {\n  all:unset;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  font-size: 1.5em;\n  user-select: none;\n  width: 70%;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  text-align: center;\n}\n\n#value:focus {\n  /* animation: forwards 0.8s blink infinite; */\n}\n\n@keyframes blink {\n  0%, 100% {\n    opacity: 1;\n  }\n  80% {\n    opacity: 0;\n  }\n}\n\n#value::after {\n  content: var(--unit-char, "");\n}\n\n#arc {\n  stroke-width: var(--stroke-width, 10px);\n  stroke-linecap: round;\n  stroke: var(--stroke-color, #000);\n  fill: none;\n}\n';
 const template = document.createElement("template");
 template.innerHTML = `<style>${css}</style>${html}`;
@@ -264,6 +264,7 @@ class SuperKnob extends HTMLElement {
     if (!this.dom.value)
       return;
     this.dom.value.disabled = false;
+    this.dom.value.readOnly = false;
   }
   attachEvents() {
     this.gestureController = new GestureController(this, this.abortSignal);
@@ -343,5 +344,8 @@ class SuperKnob extends HTMLElement {
     }
   }
 }
-console.log(`init viewer: Version ${"0.1.1"}`);
+console.log(`init viewer: Version ${"0.1.4"}`);
 customElements.define("super-knob", SuperKnob);
+export {
+  SuperKnob
+};

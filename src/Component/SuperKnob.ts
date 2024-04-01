@@ -156,6 +156,7 @@ export class SuperKnob extends HTMLElement {
   handleInputModeToggle() {
     if (!this.dom.value) return;
     this.dom.value.disabled = false;
+    this.dom.value.readOnly = false;
   }
 
   attachEvents() {
