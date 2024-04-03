@@ -151,7 +151,7 @@ class KeyboardController {
   }
 }
 const html = '<div id="container">\n  <input id="value" value="0" data-lpignore="true" readonly></input>\n  <svg></svg>\n</div>';
-const css = ':host {\n  background-color: #fff;\n  border-radius: 50%;\n  max-width: var(--max-width, 150px);\n  display: inline-block;\n  aspect-ratio: 1/1;\n}\n\n:host * {\n  box-sizing: border-box;\n}\n\nsvg {\n  width: 100%;\n  height: 100%;\n}\n\n#container {\n  width: 100%;\n  height: 100%;\n  position: relative;\n  padding: var(--offset, 0);\n}\n\n#container:hover {\n  cursor: pointer;\n}\n\n#value {\n  all:unset;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  font-size: 1.5em;\n  user-select: none;\n  width: 70%;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  text-align: center;\n}\n\n#value:focus {\n  /* animation: forwards 0.8s blink infinite; */\n}\n\n@keyframes blink {\n  0%, 100% {\n    opacity: 1;\n  }\n  80% {\n    opacity: 0;\n  }\n}\n\n#value::after {\n  content: var(--unit-char, "");\n}\n\n#arc {\n  stroke-width: var(--stroke-width, 10px);\n  stroke-linecap: round;\n  stroke: var(--stroke-color, #000);\n  fill: none;\n}\n';
+const css = ':host {\n  background-color: #fff;\n  border-radius: 50%;\n  max-width: var(--max-width, 150px);\n  display: inline-block;\n}\n\n:host * {\n  box-sizing: border-box;\n}\n\nsvg {\n  width: 100%;\n  height: 100%;\n  aspect-ratio: 1/1;\n  display: block;\n}\n\n#container {\n  width: 100%;\n  position: relative;\n  padding: var(--offset, 0);\n}\n\n#container:hover {\n  cursor: pointer;\n}\n\n#value {\n  all:unset;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  font-size: 1.5em;\n  user-select: none;\n  width: 70%;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  text-align: center;\n}\n\n#value:focus {\n  /* animation: forwards 0.8s blink infinite; */\n}\n\n@keyframes blink {\n  0%, 100% {\n    opacity: 1;\n  }\n  80% {\n    opacity: 0;\n  }\n}\n\n#value::after {\n  content: var(--unit-char, "");\n}\n\n#arc {\n  stroke-width: var(--stroke-width, 10px);\n  stroke-linecap: round;\n  stroke: var(--stroke-color, #000);\n  fill: none;\n}\n';
 const template = document.createElement("template");
 template.innerHTML = `<style>${css}</style>${html}`;
 class SuperKnob extends HTMLElement {
@@ -226,6 +226,7 @@ class SuperKnob extends HTMLElement {
     const offset = parseFloat(computedStyle.getPropertyValue("--offset").replace("px", "")) || this.offset;
     const strokeWidth = parseFloat(computedStyle.getPropertyValue("--stroke-width").replace("px", "")) || this.strokeWidth;
     const center = { x: svg.clientWidth / 2, y: svg.clientHeight / 2 };
+    console.log(center, svg.clientWidth, svg.clientHeight, offset, strokeWidth);
     const radius = svg.clientWidth / 2 - strokeWidth - offset;
     if (this.dom.arc === void 0) {
       this.dom.arc = document.createElementNS("http://www.w3.org/2000/svg", "path");

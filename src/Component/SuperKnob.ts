@@ -110,6 +110,7 @@ export class SuperKnob extends HTMLElement {
     const offset = parseFloat(computedStyle.getPropertyValue("--offset").replace("px", "")) || this.offset;
     const strokeWidth = parseFloat(computedStyle.getPropertyValue("--stroke-width").replace("px", "")) || this.strokeWidth;
     const center = { x: svg.clientWidth / 2, y: svg.clientHeight / 2 };
+    console.log(center, svg.clientWidth, svg.clientHeight, offset, strokeWidth);
     const radius = svg.clientWidth / 2 - strokeWidth - offset;
 
     if (this.dom.arc === undefined) {
