@@ -1,6 +1,6 @@
 {
   "name": "super-knob",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "",
   "main": "/dist/super-knob.js",
   "module": "/dist/super-knob.mjs",
